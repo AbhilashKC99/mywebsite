@@ -1,3 +1,31 @@
+/* assets/css/style.css */
+
+:root {
+  --primary-color: #002b5c;
+  --accent-color: #00bcd4;
+  --font-body: 'Inter', sans-serif;
+  --font-heading: 'Poppins', sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  color: #333;
+  background: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  color: var(--primary-color);
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+
 body {
     margin: 0;
     padding: 0;
