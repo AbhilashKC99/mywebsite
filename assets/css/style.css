@@ -2,33 +2,63 @@
 
 .main-nav {
   background-color: var(--primary-color);
-  padding: 10px 0;
+  padding: 15px 0; /* Slightly more padding for a modern feel */
   text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
 }
 
 .main-nav ul {
   list-style: none;
   margin: 0;
   padding: 0;
+  display: flex; /* Use flexbox for better alignment */
+  justify-content: center; /* Center the navigation items */
+  gap: 30px; /* Space between items */
 }
 
 .main-nav li {
-  display: inline;
-  margin: 0 15px;
+  /* No display: inline needed with flexbox on the ul */
 }
 
-.main-nav a {
-  color: white;
+.main-nav .nav-link { /* Using a class for links for more specific styling */
+  color: var(--text-color);
   font-weight: 500;
   text-decoration: none;
   font-family: var(--font-heading);
-  transition: color 0.3s ease;
+  position: relative; /* Needed for the underline effect */
+  padding-bottom: 5px; /* Space for the underline */
+  transition: color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
 }
 
-.main-nav a:hover {
+.main-nav .nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--accent-color);
+  transition: width 0.3s ease-out; /* Animation for the underline */
+}
+
+.main-nav .nav-link:hover {
   color: var(--accent-color);
+  transform: translateY(-2px); /* Slight lift on hover */
 }
 
+.main-nav .nav-link:hover::after,
+.main-nav .nav-link.active::after { /* Assuming you add 'active' class to current page */
+  width: 100%; /* Expand underline on hover or if active */
+}
+
+/* For better responsiveness on smaller screens */
+@media (max-width: 768px) {
+  .main-nav ul {
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    justify-content: space-around; /* Distribute space more evenly */
+    gap: 15px; /* Reduce gap on smaller screens */
+  }
+}
 :root {
   --primary-color: #002b5c;
   --accent-color: #00bcd4;
