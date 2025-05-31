@@ -1,69 +1,12 @@
 /* assets/css/style.css */
 
-.main-nav {
-  background-color: var(--primary-color);
-  padding: 15px 0; /* Slightly more padding for a modern feel */
-  text-align: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
-}
-
-.main-nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex; /* Use flexbox for better alignment */
-  justify-content: center; /* Center the navigation items */
-  gap: 30px; /* Space between items */
-}
-
-.main-nav li {
-  /* No display: inline needed with flexbox on the ul */
-}
-
-.main-nav .nav-link { /* Using a class for links for more specific styling */
-  color: var(--text-color);
-  font-weight: 500;
-  text-decoration: none;
-  font-family: var(--font-heading);
-  position: relative; /* Needed for the underline effect */
-  padding-bottom: 5px; /* Space for the underline */
-  transition: color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
-}
-
-.main-nav .nav-link::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 0;
-  height: 2px;
-  background-color: var(--accent-color);
-  transition: width 0.3s ease-out; /* Animation for the underline */
-}
-
-.main-nav .nav-link:hover {
-  color: var(--accent-color);
-  transform: translateY(-2px); /* Slight lift on hover */
-}
-
-.main-nav .nav-link:hover::after,
-.main-nav .nav-link.active::after { /* Assuming you add 'active' class to current page */
-  width: 100%; /* Expand underline on hover or if active */
-}
-
-/* For better responsiveness on smaller screens */
-@media (max-width: 768px) {
-  .main-nav ul {
-    flex-wrap: wrap; /* Allow items to wrap to the next line */
-    justify-content: space-around; /* Distribute space more evenly */
-    gap: 15px; /* Reduce gap on smaller screens */
-  }
-}
+/* Root variables - Ensure these are defined once at the top of your stylesheet */
 :root {
-  --primary-color: #002b5c;
-  --accent-color: #00bcd4;
+  --primary-color: #002b5c; /* Deep blue, matching your existing primary */
+  --accent-color: #00bcd4; /* Vibrant cyan, matching your existing accent */
   --font-body: 'Inter', sans-serif;
   --font-heading: 'Poppins', sans-serif;
+  --text-light-color: #f0f0f0; /* New variable for light text on dark backgrounds */
 }
 
 body {
@@ -75,6 +18,104 @@ body {
   line-height: 1.6;
 }
 
+/* --- Main Navigation Styles --- */
+.main-nav {
+  background-color: var(--primary-color);
+  padding: 1rem 0; /* Use rem for better scalability, ~16px */
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* Stronger, modern shadow */
+  position: sticky; /* Make it stick to the top */
+  top: 0;
+  z-index: 1000; /* Ensure it stays above other content */
+}
+
+.main-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+  justify-content: center;
+  gap: 2.5rem; /* ~40px space between items for desktop */
+}
+
+.main-nav li {
+  /* No specific styles needed here, flex handles layout */
+}
+
+.main-nav .nav-link {
+  color: var(--text-light-color); /* Use the new light text color */
+  font-weight: 600; /* Slightly bolder for emphasis */
+  text-decoration: none;
+  font-family: var(--font-heading); /* Using Poppins for navigation links */
+  position: relative;
+  padding: 0.5rem 0.75rem; /* Padding for click area */
+  transition: color 0.3s ease, transform 0.3s ease;
+  display: flex; /* Use flex to align emoji and text */
+  align-items: center;
+  gap: 0.5rem; /* Space between emoji and text */
+}
+
+/* Underline effect for nav links */
+.main-nav .nav-link::after {
+  content: '';
+  position: absolute;
+  left: 50%; /* Start from the center */
+  transform: translateX(-50%); /* Adjust to truly center */
+  bottom: 0;
+  width: 0;
+  height: 3px; /* Slightly thicker underline */
+  background-color: var(--accent-color);
+  border-radius: 2px; /* Soften the underline edges */
+  transition: width 0.3s ease-out;
+}
+
+.main-nav .nav-link:hover {
+  color: var(--accent-color); /* Accent color on hover */
+  transform: translateY(-3px); /* More noticeable lift on hover */
+}
+
+.main-nav .nav-link:hover::after,
+.main-nav .nav-link.active::after {
+  width: calc(100% - 1.5rem); /* Underline extends almost full width, with padding */
+}
+
+/* Current active page styling */
+.main-nav .nav-link.active {
+  color: var(--accent-color); /* Keep accent color for active link */
+  /* No transform needed for active, it indicates current state */
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+  .main-nav {
+    padding: 1rem 0; /* Consistent padding */
+  }
+
+  .main-nav ul {
+    flex-direction: column; /* Stack items vertically on smaller screens */
+    gap: 1rem; /* Reduced gap for stacked items */
+  }
+
+  .main-nav .nav-link {
+    font-size: 1.1rem; /* Slightly smaller text for mobile */
+    padding: 0.6rem 1rem; /* Adjust padding for mobile links */
+    justify-content: center; /* Center content within each link */
+    width: 100%; /* Make links take full width for better tapping */
+  }
+
+  .main-nav .nav-link::after {
+    bottom: 0.2rem; /* Adjust underline position for mobile */
+    height: 2px; /* Slightly thinner underline */
+  }
+
+  .main-nav .nav-link:hover::after,
+  .main-nav .nav-link.active::after {
+    width: calc(100% - 2rem); /* Adjusted width for mobile underline */
+  }
+}
+
+/* --- Existing Styles (from your original snippet) --- */
 .container {
   max-width: 800px;
   margin: 40px auto;
