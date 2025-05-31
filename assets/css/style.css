@@ -257,3 +257,176 @@ footer {
 .download-btn:hover {
   background-color: #003060;
 }
+/* Reset & basics */
+body {
+  margin: 0; 
+  font-family: 'Inter', sans-serif;
+  background: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+a {
+  color: #1e90ff;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Navigation */
+nav.main-nav {
+  background: #004080;
+  padding: 15px 0;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+nav.main-nav ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 30px;
+}
+nav.main-nav a.nav-link {
+  color: #fff;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+nav.main-nav a.nav-link:hover {
+  color: #f9c74f;
+}
+
+/* Hero section */
+.hero {
+  background: #004080;
+  color: white;
+  text-align: center;
+  padding: 60px 20px 40px;
+  box-shadow: inset 0 -8px 15px -8px rgba(0,0,0,0.4);
+}
+.profile-photo {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #f9c74f;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  margin: 0 auto 20px;
+  display: block;
+  transition: transform 0.3s ease;
+}
+.profile-photo:hover {
+  transform: scale(1.05);
+}
+.hero h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 3rem;
+  margin: 0 0 10px;
+  letter-spacing: 1.5px;
+  color: #ffffff;
+}
+.hero p {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+/* Section styling */
+main section {
+  max-width: 900px;
+  margin: 40px auto;
+  background: white;
+  padding: 30px 25px;
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+}
+
+h2 {
+  font-family: 'Poppins', sans-serif;
+  color: #004080;
+  font-weight: 700;
+  margin-bottom: 25px;
+  font-size: 2rem;
+  border-bottom: 3px solid #f9c74f;
+  padding-bottom: 8px;
+}
+
+/* About */
+.about p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+/* Skills */
+.skills ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  font-size: 1.1rem;
+}
+.skills li {
+  margin-bottom: 10px;
+}
+
+/* Hobbies */
+.hobbies .hobby-list {
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.hobby-card {
+  background: #f9c74f;
+  border-radius: 12px;
+  box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+  width: 260px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: #333;
+}
+.hobby-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+}
+.hobby-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+.hobby-card h3 {
+  margin: 15px 20px 8px;
+  font-family: 'Poppins', sans-serif;
+}
+.hobby-card p {
+  margin: 0 20px 15px;
+  font-size: 1rem;
+}
+
+/* Footer */
+footer {
+  background: #004080;
+  color: white;
+  text-align: center;
+  padding: 15px 20px;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hobby-card {
+    width: 100%;
+    max-width: 350px;
+  }
+  nav.main-nav ul {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+}
