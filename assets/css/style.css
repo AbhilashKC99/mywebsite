@@ -243,3 +243,17 @@ footer {
     order: -1; /* Place button first in visual order */
   }
 }
+.download-btn {
+  display: inline-block;
+  background-color: #004080;
+  color: white;
+  padding: 10px 20px;
+  font-weight: 600;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.download-btn:hover {
+  background-color: #003060;
+}
