@@ -1,125 +1,125 @@
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #0f172a;
-    color: #f1f5f9;
-    display: flex;
-    justify-content: center;
-    padding: 50px 20px;
-  }
-  
-  .timeline {
-    position: relative;
-    border-left: 3px solid #38bdf8;
-    padding-left: 30px;
-  }
-  
-  .timeline::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -4px;
-    width: 6px;
-    height: 30px;
-    background: #38bdf8;
-    border-radius: 3px;
-    box-shadow: 0 0 0px #38bdf8, 0 0 20px #38bdf8;
-    animation: blink 1.2s infinite ease-in-out;
-  }
-  
-  
-  
-  .role {
-    background-color: #1e293b;
-    padding: 20px;
-    margin-bottom: 30px;
-    border-radius: 12px;
-    position: relative;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  }
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #0f172a;
+  color: #f1f5f9;
+  display: flex;
+  justify-content: center;
+  padding: 50px 20px;
+  box-sizing: border-box;
+}
 
+.timeline {
+  position: relative;
+  border-left: 3px solid #38bdf8;
+  padding-left: 30px;
+  max-width: 800px;
+  width: 100%;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -4px;
+  width: 6px;
+  height: 30px;
+  background: #38bdf8;
+  border-radius: 3px;
+  box-shadow: 0 0 0px #38bdf8, 0 0 20px #38bdf8;
+  animation: blink 1.2s infinite ease-in-out;
+}
+
+.role,
+.studies {
+  background-color: #1e293b;
+  padding: 20px;
+  margin-bottom: 30px;
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.year {
+  position: absolute;
+  left: -180px;
+  top: 26px;
+  width: 140px;
+  text-align: right;
+  color: #94a3b8;
+  font-size: 0.95em;
+  white-space: nowrap;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-bottom: 8px;
+}
+
+ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+.role::before,
+.studies::before {
+  content: '';
+  position: absolute;
+  top: 25px;
+  left: -40.5px;
+  width: 14px;
+  height: 14px;
+  background-color: #38bdf8;
+  border-radius: 50%;
+  border: 3px solid #0f172a;
+}
+
+.studies .title {
+  color: #32a6d7;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.studies .year {
+  color: #94a3b8;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 10px #38bdf8, 0 0 20px #38bdf8;
+  }
+  50% {
+    opacity: 0.2;
+    box-shadow: 0 0 2px #38bdf8, 0 0 5px #38bdf8;
+  }
+}
+
+/* Responsive Fixes */
+@media screen and (max-width: 768px) {
   .year {
-    position: absolute;
-    left: -185px;
-    top: 26px;
-    width: 140px; /* define width so text-align can take effect */
-    text-align: right;
-    color: #94a3b8;
-    font-size: 0.95em;
-    white-space: nowrap;
-    margin-right: 40px;
+    position: static;
+    text-align: left;
+    margin-bottom: 10px;
+    width: auto;
   }
-  
 
+  .role,
   .studies {
-    background-color: #1e293b; /* consistent background */
-    padding: 20px;
-    margin-bottom: 30px;
-    border-radius: 12px;
-    position: relative;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    color: #32a6d7; /* subtle gray-green tone for general text */
-  }
-  
-  .studies .title {
-    color: #32a6d7; /* dark emerald green for title */
-    font-weight: bold;
-    font-size: 1.1em;
-  }
-  
-  .studies .year {
-    color: #94a3b8; /* softer desaturated green for the year */
-  }
-
-
-  .studies::before {
-    content: '';
-    position: absolute;
-    top: 25px;
-    left: -40.5px;
-    width: 14px;
-    height: 14px;
-    background-color: #38bdf8;
-    border-radius: 50%;
-    border: 3px solid #0f172a;
-    /* animation: blink 3s infinite ease-in-out; */
-  }
-  
-  .role::before {
-    content: '';
-    position: absolute;
-    top: 25px;
-    left: -40.5px;
-    width: 14px;
-    height: 14px;
-    background-color: #38bdf8;
-    border-radius: 50%;
-    border: 3px solid #0f172a;
-    /* animation: blink 3s infinite ease-in-out; */
-  }
-  
-  .title {
-    font-weight: bold;
-    font-size: 1.2em;
-    margin-bottom: 8px;
-  }
-  
-  ul {
     padding-left: 20px;
-    margin: 0;
   }
-  
-  li {
-    margin-bottom: 6px;
+
+  .timeline {
+    padding-left: 20px;
+    border-left-width: 2px;
   }
-  @keyframes blink {
-    0%, 100% {
-      opacity: 1;
-      box-shadow: 0 0 10px #38bdf8, 0 0 20px #38bdf8;
-    }
-    50% {
-      opacity: 0.2;
-      box-shadow: 0 0 2px #38bdf8, 0 0 5px #38bdf8;
-    }
+
+  .role::before,
+  .studies::before {
+    left: -22px;
   }
-  
-  
+}
