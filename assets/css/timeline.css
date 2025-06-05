@@ -1,6 +1,48 @@
+/* Add this at the top of your CSS */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Responsive page wrapper */
+body {
+  font-family: sans-serif;
+  padding: 20px;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Make sure .timeline doesn't overflow */
+.timeline {
+  width: 100%;
+  max-width: 100%;
+  padding: 20px;
+}
+
+/* Adjust text containers */
+.role, .studies {
+  margin-bottom: 30px;
+  word-wrap: break-word;
+}
+
+.year {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+/* Optional: prevent wide content from overflowing */
+ul {
+  padding-left: 20px;
+  list-style: disc;
+  max-width: 100%;
+}
+
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #0f172a;
+  background-color: #ffffff;
   color: #f1f5f9;
   display: flex;
   justify-content: center;
@@ -10,7 +52,7 @@ body {
 
 .timeline {
   position: relative;
-  border-left: 3px solid #38bdf8;
+  border-left: 3px solid #004080;
   padding-left: 30px;
   max-width: 800px;
   width: 100%;
@@ -22,7 +64,7 @@ body {
   top: 0;
   left: -4px;
   width: 6px;
-  height: 30px;
+  height: 50px;
   background: #38bdf8;
   border-radius: 3px;
   box-shadow: 0 0 0px #38bdf8, 0 0 20px #38bdf8;
@@ -31,7 +73,7 @@ body {
 
 .role,
 .studies {
-  background-color: #1e293b;
+  background-color: #004080;
   padding: 20px;
   margin-bottom: 30px;
   border-radius: 12px;
@@ -45,7 +87,7 @@ body {
   top: 26px;
   width: 140px;
   text-align: right;
-  color: #94a3b8;
+  color: #004080;
   font-size: 0.95em;
   white-space: nowrap;
 }
@@ -70,12 +112,12 @@ li {
   content: '';
   position: absolute;
   top: 25px;
-  left: -40.5px;
+  left: -40px;
   width: 14px;
   height: 14px;
   background-color: #38bdf8;
   border-radius: 50%;
-  border: 3px solid #0f172a;
+  border: 3px solid #38bdf8;
 }
 
 .studies .title {
@@ -85,7 +127,7 @@ li {
 }
 
 .studies .year {
-  color: #94a3b8;
+  color: #004080;
 }
 
 @keyframes blink {
@@ -140,16 +182,16 @@ footer {
 
 .back-to-home-btn {
   display: inline-block;
-  padding: 10px 20px;
-  background-color: #0167d4;
+  padding: 30px 20px;
+  background-color: #004080;
   color: white;
   text-decoration: none;
-  border-radius: 5px;
+  border-radius: 12px;
   font-weight: bold;
   margin-bottom: 10px;
   transition: background-color 0.3s ease;
 }
 
 .back-to-home-btn:hover {
-  background-color: #0056b3;
+  background-color: #32a6d7;
 }
