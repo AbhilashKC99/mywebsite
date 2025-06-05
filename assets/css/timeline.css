@@ -123,3 +123,33 @@ li {
     left: -22px;
   }
 }
+footer {
+  width: 100%;
+  background-color: #f0f0f0;
+  padding: 20px 0;
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-content {
+  text-align: center;
+}
+
+.back-to-home-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #0167d4;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.back-to-home-btn:hover {
+  background-color: #0056b3;
+}
