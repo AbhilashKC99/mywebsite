@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTS Code News Lookup</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    .hidden { display: none; }
+    .container { max-width: 400px; margin: auto; }
+    label, input, button { display: block; width: 100%; margin-bottom: 15px; }
+    button { width: auto; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Form Section -->
+    <form id="htsForm">
+      <label for="htsCode">Enter HTS code:</label>
+      <input type="text" id="htsCode" name="htsCode" required>
+      <button type="submit">Submit</button>
+    </form>
+
+    <!-- Result Section -->
+    <div id="resultSection" class="hidden">
+      <p><strong>official news:</strong> ...</p>
+      <p><strong>unofficial news:</strong> ...</p>
+      <button id="backBtn">Back</button>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('htsForm');
+    const resultSection = document.getElementById('resultSection');
+    const backBtn = document.getElementById('backBtn');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      form.classList.add('hidden');
+      resultSection.classList.remove('hidden');
+    });
+
+    backBtn.addEventListener('click', function() {
+      resultSection.classList.add('hidden');
+      form.classList.remove('hidden');
+      form.reset();
+    });
+  </script>
+</body>
+</html>
