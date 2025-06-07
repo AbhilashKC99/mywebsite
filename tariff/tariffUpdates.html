@@ -22,28 +22,13 @@
 
     <!-- Result Section -->
     <div id="resultSection" class="hidden">
-      <p><strong>official news:</strong> ...</p>
-      <p><strong>unofficial news:</strong> ...</p>
-      <button id="backBtn">Back</button>
+        <p><strong>Official news:</strong> <span id="officialResult"></span></p>
+        <p><strong>Unofficial news:</strong> <span id="unofficialResult"></span></p>
+        <button id="backBtn">Back</button>
     </div>
+
   </div>
-
-  <script>
-    const form = document.getElementById('htsForm');
-    const resultSection = document.getElementById('resultSection');
-    const backBtn = document.getElementById('backBtn');
-
-    form.addEventListener('submit', function(event) {
-      event.preventDefault();
-      form.classList.add('hidden');
-      resultSection.classList.remove('hidden');
-    });
-
-    backBtn.addEventListener('click', function() {
-      resultSection.classList.add('hidden');
-      form.classList.remove('hidden');
-      form.reset();
-    });
-  </script>
+  <!-- Link your external JS file here -->
+  <script src="../assets/js/tariffUpdates.js"></script>
 </body>
 </html>
