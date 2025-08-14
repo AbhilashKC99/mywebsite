@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Supply Chain Simulator</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial; margin: 20px; }
+    .controls { margin-bottom: 20px; }
+    label { display: block; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+<h2>Supply Chain Simulation</h2>
+<div class="controls">
+  <label>Production Rate (cases/day): <input type="range" id="prodRate" min="50" max="300" value="100" oninput="updateLabel('prodLabel', this.value)"> <span id="prodLabel">100</span></label>
+  <label>Customer Demand (pallets/week): <input type="range" id="custDemand" min="2" max="10" value="5" oninput="updateLabel('demandLabel', this.value)"> <span id="demandLabel">5</span></label>
+  <label>Port Congestion (extra days): <input type="range" id="portDelay" min="0" max="15" value="3" oninput="updateLabel('delayLabel', this.value)"> <span id="delayLabel">3</span></label>
+  <button onclick="runSimulation()">Run Simulation</button>
+</div>
+
+<canvas id="inventoryChart" width="800" height="400"></canvas>
+
+<script>
+function updateLabel(id, value) {
+    document.getElementById(id).textContent = value;
+}
+
+function runSimulation() {
+    let prodRate = parseInt(document.getElementById('prodRate').value);
+    let demand = parseInt(document.getElementById('custDemand').value) * 50; // pallets to cases
+    let delay = parseInt(document.getElementById('portDelay').value);
+
+    let days = 90;
+    let inventory = [];
+    let stock = 0;
+    let oceanTransit = [];
+
+    for (let day = 1; day <= days; day++) {
+        // Produce
+        stock += prodRate;
+
+        // Ship if container full
+        if (stock >= 1000) {
+            stock -= 1000;
+            oceanTransit.push(delay + 20); // 20 days base + delay
+        }
+
+        // Move shipments
+        for (let i = 0; i < oceanTransit.length; i++) {
+            oceanTransit[i]--;
+            if (oceanTransit[i] === 0) {
+                stock += 1000; // container arrives
+                oceanTransit.splice(i, 1);
+                i--;
+            }
+        }
+
+        // Customer demand every 7 days
+        if (day % 7 === 0) {
+            if (stock >= demand) {
+                stock -= demand;
+            } else {
+                stock = 0; // stockout
+            }
+        }
+
+        inventory.push(stock);
+    }
+
+    drawChart(inventory);
+}
+
+function drawChart(data) {
+    let ctx = document.getElementById('inventoryChart').getContext('2d');
+    if (window.invChart) window.invChart.destroy();
+    window.invChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: Array.from({length: data.length}, (_, i) => i + 1),
+            datasets: [{
+                label: 'Inventory (cases)',
+                data: data,
+                borderColor: 'blue',
+                fill: false
+            }]
+        },
+        options: { responsive: true, scales: { x: { title: { display: true, text: 'Day' } }, y: { title: { display: true, text: 'Cases' } } } }
+    });
+}
+</script>
+
+</body>
+</html>
