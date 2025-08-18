@@ -1,93 +1,198 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Supply Chain Simulator</title>
+  <title>Supply Chain Simulator - Animated</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { font-family: Arial; margin: 20px; }
-    .controls { margin-bottom: 20px; }
+    body { font-family: Arial; margin: 20px; background: #f9f9f9; }
+    h1, h2 { text-align: center; }
+    .controls, .intro, .dashboard { margin: 20px auto; max-width: 900px; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
     label { display: block; margin-top: 10px; }
+    input[type=range] { width: 100%; }
+    button { margin-top: 10px; padding: 10px 15px; font-size: 14px; cursor: pointer; }
+    canvas { background: #fff; border: 1px solid #ddd; margin-top: 30px; border-radius: 10px; }
+    .sku-status { display: flex; justify-content: space-around; margin-top: 10px; font-weight: bold; }
+    .controls-buttons { display: flex; justify-content: space-around; margin-top: 15px; }
+    table { border-collapse: collapse; margin: auto; }
+    th, td { border: 1px solid #999; padding: 8px 12px; text-align: center; }
   </style>
 </head>
 <body>
 
-<h2>Supply Chain Simulation</h2>
-<div class="controls">
-  <label>Production Rate (cases/day): <input type="range" id="prodRate" min="50" max="300" value="100" oninput="updateLabel('prodLabel', this.value)"> <span id="prodLabel">100</span></label>
-  <label>Customer Demand (pallets/week): <input type="range" id="custDemand" min="2" max="10" value="5" oninput="updateLabel('demandLabel', this.value)"> <span id="demandLabel">5</span></label>
-  <label>Port Congestion (extra days): <input type="range" id="portDelay" min="0" max="15" value="3" oninput="updateLabel('delayLabel', this.value)"> <span id="delayLabel">3</span></label>
-  <button onclick="runSimulation()">Run Simulation</button>
+<h1>Supply Chain Simulator</h1>
+
+<div class="intro">
+<h2>Simulation Info</h2>
+<p>Below are the SKU details before running the simulation:</p>
+<table>
+<tr>
+<th>SKU</th><th>Cases per Pallet</th><th>Container Size (cases)</th><th>Origin</th><th>Base Transit (days)</th>
+</tr>
+<tr><td>Aluminum Foil</td><td>50</td><td>1000</td><td>China</td><td>20</td></tr>
+<tr><td>Trash Bags</td><td>60</td><td>1200</td><td>Vietnam</td><td>25</td></tr>
+<tr><td>Silicone Ingot</td><td>40</td><td>800</td><td>Taiwan</td><td>18</td></tr>
+<tr><td>Bagasse Plate</td><td>50</td><td>1000</td><td>Thailand</td><td>22</td></tr>
+</table>
+<p><b>Note:</b> Production rate, customer demand, and port congestion can be adjusted using the sliders below. Stockout threshold is 10 pallets per SKU.</p>
 </div>
 
-<canvas id="inventoryChart" width="800" height="400"></canvas>
+<div class="controls">
+  <label>Production Rate (cases/day): <input type="range" id="prodRate" min="50" max="300" value="150" oninput="updateLabel('prodLabel', this.value)"> <span id="prodLabel">150</span></label>
+  <label>Customer Demand (pallets/week): <input type="range" id="custDemand" min="2" max="10" value="5" oninput="updateLabel('demandLabel', this.value)"> <span id="demandLabel">5</span></label>
+  <label>Port Congestion (extra days): <input type="range" id="portDelay" min="0" max="15" value="5" oninput="updateLabel('delayLabel', this.value)"> <span id="delayLabel">5</span></label>
+  <div class="controls-buttons">
+    <button onclick="startAnimation()">Play</button>
+    <button onclick="pauseAnimation()">Pause</button>
+    <button onclick="resetAnimation()">Reset</button>
+  </div>
+</div>
+
+<div class="dashboard">
+  <h3>SKU Status</h3>
+  <div class="sku-status">
+    <span>Aluminum Foil: <span id="statusFoil">-</span></span>
+    <span>Trash Bags: <span id="statusTrash">-</span></span>
+    <span>Silicone Ingot: <span id="statusSilicone">-</span></span>
+    <span>Bagasse Plate: <span id="statusPlate">-</span></span>
+  </div>
+</div>
+
+<canvas id="inventoryChart" width="900" height="500"></canvas>
 
 <script>
-function updateLabel(id, value) {
-    document.getElementById(id).textContent = value;
+function updateLabel(id, value) { document.getElementById(id).textContent = value; }
+
+let skus = {
+    "Aluminum Foil": { "casesPerPallet": 50, "containerSize": 1000, "baseTransit": 20, "color": "blue" },
+    "Trash Bags": { "casesPerPallet": 60, "containerSize": 1200, "baseTransit": 25, "color": "green" },
+    "Silicone Ingot": { "casesPerPallet": 40, "containerSize": 800, "baseTransit": 18, "color": "red" },
+    "Bagasse Plate": { "casesPerPallet": 50, "containerSize": 1000, "baseTransit": 22, "color": "orange" }
+};
+
+let invChart;
+let animInterval;
+let currentDay = 0;
+let totalDays = 90;
+let precomputedData = {};
+
+function precomputeSimulation() {
+    let prodRate = parseInt(document.getElementById('prodRate').value);
+    let demandPallets = parseInt(document.getElementById('custDemand').value);
+    let portDelay = parseInt(document.getElementById('portDelay').value);
+
+    let inventoryData = {};
+    for (let sku in skus) inventoryData[sku] = [];
+    let stock = {};
+    let oceanTransit = {};
+    for (let sku in skus) { stock[sku] = 0; oceanTransit[sku] = []; }
+
+    for (let day = 1; day <= totalDays; day++) {
+        for (let sku in skus) {
+            stock[sku] += prodRate;
+            while (stock[sku] >= skus[sku].containerSize) {
+                stock[sku] -= skus[sku].containerSize;
+                oceanTransit[sku].push(skus[sku].baseTransit + portDelay);
+            }
+            for (let i = 0; i < oceanTransit[sku].length; i++) {
+                oceanTransit[sku][i]--;
+                if (oceanTransit[sku][i] <= 0) { stock[sku] += skus[sku].containerSize; oceanTransit[sku].splice(i,1); i--; }
+            }
+            if (day % 7 === 0) {
+                let demandCases = demandPallets * skus[sku].casesPerPallet;
+                if (stock[sku] >= demandCases) stock[sku] -= demandCases;
+                else stock[sku] = 0;
+            }
+            inventoryData[sku].push(stock[sku]);
+        }
+    }
+    precomputedData = inventoryData;
 }
 
-function runSimulation() {
-    let prodRate = parseInt(document.getElementById('prodRate').value);
-    let demand = parseInt(document.getElementById('custDemand').value) * 50; // pallets to cases
-    let delay = parseInt(document.getElementById('portDelay').value);
+function initChart() {
+    let ctx = document.getElementById('inventoryChart').getContext('2d');
+    if (invChart) invChart.destroy();
 
-    let days = 90;
-    let inventory = [];
-    let stock = 0;
-    let oceanTransit = [];
+    let datasets = [];
+    for (let sku in skus) {
+        datasets.push({
+            label: sku,
+            data: [],
+            borderColor: skus[sku].color,
+            fill: false,
+            tension: 0.2
+        });
 
-    for (let day = 1; day <= days; day++) {
-        // Produce
-        stock += prodRate;
-
-        // Ship if container full
-        if (stock >= 1000) {
-            stock -= 1000;
-            oceanTransit.push(delay + 20); // 20 days base + delay
-        }
-
-        // Move shipments
-        for (let i = 0; i < oceanTransit.length; i++) {
-            oceanTransit[i]--;
-            if (oceanTransit[i] === 0) {
-                stock += 1000; // container arrives
-                oceanTransit.splice(i, 1);
-                i--;
-            }
-        }
-
-        // Customer demand every 7 days
-        if (day % 7 === 0) {
-            if (stock >= demand) {
-                stock -= demand;
-            } else {
-                stock = 0; // stockout
-            }
-        }
-
-        inventory.push(stock);
+        // Stockout threshold line for this SKU
+        datasets.push({
+            label: sku + " Stockout Threshold",
+            data: Array(totalDays).fill(10 * skus[sku].casesPerPallet),
+            borderColor: skus[sku].color,
+            borderDash: [5,5],
+            fill: false,
+            pointRadius: 0,
+        });
     }
 
-    drawChart(inventory);
-}
-
-function drawChart(data) {
-    let ctx = document.getElementById('inventoryChart').getContext('2d');
-    if (window.invChart) window.invChart.destroy();
-    window.invChart = new Chart(ctx, {
+    invChart = new Chart(ctx, {
         type: 'line',
-        data: {
-            labels: Array.from({length: data.length}, (_, i) => i + 1),
-            datasets: [{
-                label: 'Inventory (cases)',
-                data: data,
-                borderColor: 'blue',
-                fill: false
-            }]
-        },
-        options: { responsive: true, scales: { x: { title: { display: true, text: 'Day' } }, y: { title: { display: true, text: 'Cases' } } } }
+        data: { labels: [], datasets: datasets },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: true, position: 'bottom' }, tooltip: { mode: 'index', intersect: false } },
+            scales: { x: { title: { display: true, text: 'Day' } }, y: { title: { display: true, text: 'Cases in Warehouse' }, min: 0 } }
+        }
     });
 }
+
+function animateDay() {
+    if (currentDay >= totalDays) { clearInterval(animInterval); return; }
+    currentDay++;
+    invChart.data.labels.push(currentDay);
+
+    let i = 0;
+    for (let sku in precomputedData) {
+        invChart.data.datasets[i].data.push(precomputedData[sku][currentDay-1]);
+        i += 2; // skip threshold dataset
+    }
+    invChart.update();
+
+    // Update SKU dashboard with 10-pallet threshold
+    for (let sku in precomputedData) {
+        let lastStock = precomputedData[sku][currentDay-1];
+        let palletThreshold = 10 * skus[sku].casesPerPallet;
+        let status = "Safe";
+        if (lastStock <= palletThreshold) status = "Stockout";
+        else if (lastStock > skus[sku].containerSize) status = "Overstock";
+        document.getElementById("status" + sku.replace(/\s/g,'')).textContent = status;
+    }
+}
+
+function startAnimation() {
+    if (!precomputedData || Object.keys(precomputedData).length === 0) {
+        precomputeSimulation();
+        initChart();
+        currentDay = 0;
+    }
+    if (animInterval) clearInterval(animInterval);
+    animInterval = setInterval(animateDay, 100);
+}
+
+function pauseAnimation() {
+    if (animInterval) clearInterval(animInterval);
+}
+
+function resetAnimation() {
+    pauseAnimation();
+    currentDay = 0;
+    initChart();
+    precomputedData = {};
+    for (let sku in skus) {
+        document.getElementById("status" + sku.replace(/\s/g,'')).textContent = "-";
+    }
+}
+
+// Run default simulation on load
+window.onload = () => { startAnimation(); };
 </script>
 
 </body>
