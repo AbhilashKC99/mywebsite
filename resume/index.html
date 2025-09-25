@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Edit Resume | Abhilash Chandra</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/resume.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <nav class="main-nav" aria-label="Primary Navigation">
+    <ul>
+      <li><a href="/" class="nav-link">🏠 Home</a></li>
+      <li><a href="/io/" class="nav-link">📁 Portfolio</a></li>
+      <!-- <li><a href="/blog/" class="nav-link">📝 Blog</a></li> -->
+      <li><a href="/timeline/" class="nav-link">📅 Career Timeline</a></li>
+      <li><a href="/sim/" class="nav-link">Supply Chain Simulation</a></li>
+      <li><a href="/resume/" class="nav-link active">📄 Edit Resume</a></li>
+      <!-- <li><a href="tariff/tariffUpdates.html" class="nav-link">Tariff Updates</a></li> -->
+    </ul>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <h1>Edit Resume</h1>
+      <p>Tailor your resume to match any job description using AI-powered optimization</p>
+    </section>
+
+    <section class="resume-editor">
+      <div class="editor-container">
+        <div class="input-section">
+          <h2>Job Description</h2>
+          <p>Paste the job description below to generate a tailored resume. The system will analyze your detailed career experience and create optimized bullet points that match the job requirements.</p>
+          <textarea 
+            id="jobDescription" 
+            placeholder="Paste the job description here..."
+            rows="15"
+          ></textarea>
+          <div class="button-group">
+            <button id="generateResume" class="btn btn-primary">Generate Tailored Resume</button>
+            <button id="clearForm" class="btn btn-secondary">Clear</button>
+          </div>
+        </div>
+
+        <div class="output-section">
+          <h2>Generated Resume (LaTeX Format)</h2>
+            <div class="pdf-instructions">
+              <p><strong>PDF Generation Options:</strong></p>
+              <ul>
+                <li><strong>Generate PDF:</strong> Opens a print-ready preview where you can save as PDF using your browser's print function</li>
+                <li><strong>Open in Overleaf:</strong> Opens the LaTeX code in Overleaf.com for professional PDF compilation</li>
+                <li><strong>Download .tex:</strong> Download the LaTeX file to compile locally with pdflatex</li>
+              </ul>
+            </div>
+          <div class="output-controls">
+            <button id="copyLatex" class="btn btn-outline">Copy LaTeX</button>
+            <button id="downloadLatex" class="btn btn-outline">Download .tex</button>
+            <button id="generatePDF" class="btn btn-primary">Generate PDF</button>
+            <button id="openOverleaf" class="btn btn-outline">Open in Overleaf</button>
+            <button id="previewResume" class="btn btn-outline">Preview</button>
+          </div>
+          <textarea 
+            id="latexOutput" 
+            placeholder="Generated LaTeX resume will appear here..."
+            rows="20"
+            readonly
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="preview-section" id="previewSection" style="display: none;">
+        <h2>Resume Preview</h2>
+        <div id="resumePreview" class="resume-preview"></div>
+      </div>
+    </section>
+
+    <section class="features">
+      <h2>How It Works</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3>ATS Optimization</h3>
+          <p>Automatically matches keywords and phrases from the job description to optimize for Applicant Tracking Systems.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📝</div>
+          <h3>LaTeX Formatting</h3>
+          <p>Generates professional, clean LaTeX-formatted resumes that are easy to compile and customize.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Instant Generation</h3>
+          <p>Creates tailored resumes in seconds, saving you hours of manual editing and formatting.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔧</div>
+          <h3>Customizable</h3>
+          <p>Edit the generated LaTeX code to fine-tune your resume for specific requirements.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📄</div>
+          <h3>PDF Generation</h3>
+          <p>Generate professional PDFs using browser print function or compile LaTeX in Overleaf for perfect formatting.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <a href="/" class="back-to-home-btn">
+        <span class="icon"></span>
+        Back to Home
+      </a>
+      <p>&copy; 2025 Abhilash Chandra. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/resume-config.js"></script>
+  <script src="../assets/js/resume.js"></script>
+</body>
+</html>

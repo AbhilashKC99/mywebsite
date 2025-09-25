@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resume Generator Test</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }
+    .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    h1 { color: #002b5c; text-align: center; }
+    .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+    .test-section h3 { color: #002b5c; margin-top: 0; }
+    textarea { width: 100%; height: 150px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    button { background: #002b5c; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 10px 5px; }
+    button:hover { background: #001f3f; }
+    .result { background: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 10px; white-space: pre-wrap; font-family: monospace; font-size: 12px; max-height: 300px; overflow-y: auto; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Resume Generator Test</h1>
+    
+    <div class="test-section">
+      <h3>Sample Job Description</h3>
+      <textarea id="jobDescription" placeholder="Enter a job description here...">We are looking for a Senior Data Analyst with expertise in Python, SQL, and Tableau. The ideal candidate will have experience in supply chain analytics, ERP systems like Oracle NetSuite, and project management. Must have strong leadership skills and experience with automation and integration projects. Knowledge of AWS cloud platforms and machine learning is a plus.</textarea>
+      <button onclick="testResumeGeneration()">Generate Resume</button>
+      <button onclick="clearTest()">Clear</button>
+    </div>
+    
+    <div class="test-section">
+      <h3>Generated LaTeX Output</h3>
+      <div id="result" class="result">Click "Generate Resume" to see the output...</div>
+    </div>
+  </div>
+
+  <script>
+    // Include the resume generator classes (simplified version for testing)
+    class ResumeOptimizer {
+      constructor() {
+        this.keywordWeights = {};
+        this.skillSynonyms = {
+          'python': ['python', 'pandas', 'matplotlib', 'data analysis', 'programming'],
+          'sql': ['sql', 'database', 'mysql', 'postgresql', 'query'],
+          'tableau': ['tableau', 'data visualization', 'dashboard', 'reporting'],
+          'erp': ['erp', 'oracle netsuite', 'sap', 'enterprise resource planning'],
+          'supply chain': ['supply chain', 'logistics', 'inventory', 'demand planning'],
+          'project management': ['project management', 'pmp', 'agile', 'scrum', 'leadership'],
+          'data analytics': ['data analytics', 'data analysis', 'business intelligence', 'insights'],
+          'automation': ['automation', 'integration', 'api', 'edi', 'suitescripts']
+        };
+      }
+
+      extractKeywords(jobDescription) {
+        const text = jobDescription.toLowerCase();
+        const keywords = {};
+        
+        Object.keys(this.skillSynonyms).forEach(skill => {
+          this.skillSynonyms[skill].forEach(synonym => {
+            const regex = new RegExp(`\\b${synonym}\\b`, 'gi');
+            const matches = text.match(regex);
+            if (matches) {
+              keywords[skill] = (keywords[skill] || 0) + matches.length;
+            }
+          });
+        });
+        
+        return keywords;
+      }
+
+      optimizeResume(jobDescription) {
+        const keywords = this.extractKeywords(jobDescription);
+        const optimizedResume = JSON.parse(JSON.stringify(baseResumeData));
+        
+        // Reorder skills based on relevance
+        optimizedResume.skills = this.optimizeSkills(optimizedResume.skills, keywords);
+        
+        return optimizedResume;
+      }
+
+      optimizeSkills(skills, keywords) {
+        const skillScores = skills.map(skill => {
+          let score = 0;
+          Object.keys(keywords).forEach(keyword => {
+            if (skill.toLowerCase().includes(keyword)) {
+              score += keywords[keyword];
+            }
+          });
+          return { skill, score };
+        });
+        
+        return skillScores
+          .sort((a, b) => b.score - a.score)
+          .map(item => item.skill);
+      }
+    }
+
+    class LaTeXGenerator {
+      generateResume(resumeData) {
+        return `\\documentclass[11pt,a4paper]{article}
+\\usepackage[utf8]{inputenc}
+\\usepackage[margin=0.75in]{geometry}
+\\usepackage{enumitem}
+\\usepackage{titlesec}
+\\usepackage{xcolor}
+\\usepackage{hyperref}
+
+% Custom colors
+\\definecolor{primary}{RGB}{0,43,92}
+\\definecolor{accent}{RGB}{0,188,212}
+
+% Section formatting
+\\titleformat{\\section}{\\Large\\bfseries\\color{primary}}{}{0em}{}[\\color{accent}\\titlerule]
+\\titleformat{\\subsection}{\\large\\bfseries\\color{primary}}{}{0em}{}
+
+% Remove page numbers
+\\pagestyle{empty}
+
+\\begin{document}
+
+% Header
+\\begin{center}
+    {\\Huge \\textbf{\\color{primary}${resumeData.name}}} \\\\[0.5em]
+    {\\Large ${resumeData.title}} \\\\[0.3em]
+    \\href{mailto:${resumeData.email}}{${resumeData.email}} $|$ 
+    ${resumeData.phone} $|$ 
+    ${resumeData.location} $|$ 
+    \\href{https://${resumeData.linkedin}}{${resumeData.linkedin}}
+\\end{center}
+
+\\section{Professional Summary}
+${resumeData.summary}
+
+\\section{Technical Skills}
+\\begin{itemize}
+${resumeData.skills.map(skill => `    \\item ${skill}`).join('\n')}
+\\end{itemize}
+
+\\section{Professional Experience}
+${resumeData.experience.map(exp => `
+\\subsection{${exp.title} - ${exp.company}}
+\\textit{${exp.duration} | ${exp.location}}
+\\begin{itemize}
+${exp.achievements.map(achievement => `    \\item ${achievement}`).join('\n')}
+\\end{itemize}`).join('')}
+
+\\section{Education}
+${resumeData.education.map(edu => `
+\\subsection{${edu.degree}}
+${edu.school} | ${edu.location} | ${edu.year}`).join('')}
+
+\\section{Certifications}
+\\begin{itemize}
+${resumeData.certifications.map(cert => `    \\item ${cert}`).join('\n')}
+\\end{itemize}
+
+\\end{document}`;
+      }
+    }
+
+    // Base resume data
+    const baseResumeData = {
+      name: "Abhilash Chandra",
+      title: "Supply Chain Data Analyst | IT Professional | ERP Consultant",
+      email: "abhilash.chandra@email.com",
+      phone: "+1 (555) 123-4567",
+      location: "Your City, State",
+      linkedin: "linkedin.com/in/abhilashchandra",
+      summary: "With 7+ years of experience managing ERP implementations, data analytics, and supply chain projects, I specialize in optimizing business processes and delivering actionable insights. Passionate about technology, problem-solving, and continuous learning.",
+      
+      experience: [
+        {
+          title: "Senior Supply Chain Data Analyst",
+          company: "Your Current Company",
+          location: "City, State",
+          duration: "2020 - Present",
+          achievements: [
+            "Led data analytics initiatives that improved supply chain efficiency by 25%",
+            "Implemented ERP systems reducing operational costs by $2M annually",
+            "Developed automated reporting dashboards using Python and Tableau",
+            "Managed cross-functional teams of 8+ members for complex projects"
+          ]
+        }
+      ],
+      
+      skills: [
+        "Data Analytics & Visualization: Python (Pandas, Matplotlib), R, Tableau, Power BI",
+        "Supply Chain & Demand Planning",
+        "ERP Systems: Oracle NetSuite, SAP CPQ, SAP ABAP", 
+        "Project Management & Team Leadership",
+        "Automation & Integration: SuiteScripts, APIs, EDI",
+        "Database Management: SQL, MySQL, PostgreSQL",
+        "Cloud Platforms: AWS, Azure, Google Cloud",
+        "Programming: Python, JavaScript, SQL, SuiteScript"
+      ],
+      
+      education: [
+        {
+          degree: "Master of Science in Information Systems",
+          school: "Your University",
+          location: "City, State",
+          year: "2017"
+        }
+      ],
+      
+      certifications: [
+        "Oracle NetSuite Certified Administrator",
+        "SAP Certified Application Associate",
+        "AWS Certified Solutions Architect",
+        "Project Management Professional (PMP)"
+      ]
+    };
+
+    function testResumeGeneration() {
+      const jobDescription = document.getElementById('jobDescription').value.trim();
+      
+      if (!jobDescription) {
+        document.getElementById('result').textContent = 'Please enter a job description first.';
+        return;
+      }
+
+      try {
+        const optimizer = new ResumeOptimizer();
+        const latexGenerator = new LaTeXGenerator();
+        
+        // Optimize resume based on job description
+        const optimizedResume = optimizer.optimizeResume(jobDescription);
+        
+        // Generate LaTeX
+        const latex = latexGenerator.generateResume(optimizedResume);
+        
+        // Display result
+        document.getElementById('result').textContent = latex;
+        
+      } catch (error) {
+        console.error('Error generating resume:', error);
+        document.getElementById('result').textContent = 'Error generating resume: ' + error.message;
+      }
+    }
+
+    function clearTest() {
+      document.getElementById('jobDescription').value = '';
+      document.getElementById('result').textContent = 'Click "Generate Resume" to see the output...';
+    }
+  </script>
+</body>
+</html>
